@@ -11,6 +11,7 @@
   },
   "author": "Jose Constela",
   "license": "MIT",
+  "homepage": "https://github.com/joseconstela/nodesfc",
   "dependencies": {
     "colors": "^1.3.3",
     "command-exists": "^1.2.8",
