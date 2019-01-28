@@ -7,6 +7,8 @@ This means that instead of having a package.json file and installing the
 dependencies via npm commands, you can specify the dependencies in a comment
 in your script.
 
+SFC will take care of installing the dependencies.
+
 ```javascript
 /**
  * node.program
