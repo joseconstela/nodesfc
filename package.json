@@ -1,16 +1,16 @@
 {
-  "name": "experiment",
-  "version": "1.0.0",
-  "description": "",
-  "main": "executor.js",
+  "name": "node-sfc",
+  "version": "0.1.0",
+  "description": "Single File Code - package.json-free node scripts",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
     "node-sfc": "./index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Jose Constela",
+  "license": "MIT",
   "dependencies": {
     "command-exists": "^1.2.8",
     "commander": "^2.19.0",
