@@ -9,7 +9,7 @@ in your script.
 
 ```javascript
 /**
- * sfc.dependencies
+ * node.program
  * @dependency lodash latest
  */
 require('lodash').map([1,2,3,4], n => console.log(n))
@@ -41,7 +41,7 @@ Example:
 
 Specifying dependencies:
   /**
-   * sfc.dependencies
+   * node.program
    * @dependency package-name version
    */
 ```
