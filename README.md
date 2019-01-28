@@ -30,20 +30,21 @@ npm i nodesfc -g
 ## Usage
 
 ```bash
-Usage: nodesfc [options]
+Usage: nodesfc [options] <file>
 
 Options:
-  -V, --version      output the version number
-  -nd, --nodemon     Executes the file continiously. Requires https://nodemon.io/
-  -h, --help         output usage information
+  -V, --version   output the version number
+  -dr, --dryrun   Removes node_modules and package-lock.json before installing dependencies.
+  -nd, --nodemon  Executes the file continiously. Requires https://nodemon.io/
+  -h, --help      output usage information
 
 Example:
-  $ nodesfc example/file.js --nodemon
+  $ nodesfc --file=example/file.js --nodemon
 
 Specifying dependencies:
   /**
    * node.program
-   * @dependency package-name version
+   * @dependency lodash latest
    */
 ```
 
