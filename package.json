@@ -1,0 +1,23 @@
+{
+  "name": "experiment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "executor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "node-sfc": "./index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "command-exists": "^1.2.8",
+    "commander": "^2.19.0",
+    "comment-parser": "^0.5.4",
+    "fs-extra": "^7.0.1",
+    "lodash": "^4.17.11",
+    "npm": "^6.7.0",
+    "process.argv": "^0.1.0"
+  }
+}
