@@ -1,6 +1,6 @@
 {
-  "name": "node-sfc",
-  "version": "0.2.2",
+  "name": "nodesfc",
+  "version": "0.2.3",
   "description": "Single File Code - package.json-free node scripts",
   "main": "index.js",
   "scripts": {
