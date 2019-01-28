@@ -24,22 +24,21 @@ It supports nodemon.io for your development-phase things.
 Use your terminal to install sfc as a globally availabe package.
 
 ```bash
-npm i node-sfc -g
+npm i nodesfc -g
 ```
 
 ## Usage
 
 ```bash
-Usage: node-sfc [options]
+Usage: nodesfc [options]
 
 Options:
   -V, --version      output the version number
-  -f, --file [file]  File to execute
   -nd, --nodemon     Executes the file continiously. Requires https://nodemon.io/
   -h, --help         output usage information
 
 Example:
-  $ node-sfc --file=example/file.js --nodemon
+  $ nodesfc example/file.js --nodemon
 
 Specifying dependencies:
   /**
@@ -51,7 +50,7 @@ Specifying dependencies:
 To get help, execute:
 
 ```bash
-node-sfc -h
+nodesfc -h
 ```
 
 ## Contributing

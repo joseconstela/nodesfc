@@ -4,6 +4,7 @@
 const npm = require('npm'),
   fs = require('fs-extra'),
   parser = require('comment-parser'),
+  colors = require('colors'),
   path = require('path'),
   commandExists = require('command-exists').sync,
   program = require('commander')
@@ -13,8 +14,8 @@ const script = require('./script')
 
 // cli parameter parsing and --help symlink
 program
-  .version('0.1.0')
-  .option('-f, --file [file]', 'File to execute')
+  .version(require('./package.json').version)
+  .arguments('<file>')
   .option('-nd, --nodemon', 'Executes the file continiously. Requires https://nodemon.io/')
 
 // must be before .parse() since
@@ -22,7 +23,7 @@ program
 program.on('--help', () => {
   console.log('')
   console.log('Example:')
-  console.log('  $ node-sfc --file=example/file.js --nodemon')
+  console.log('  $ nodesfc --file=example/file.js --nodemon')
   console.log('')
   console.log('Specifying dependencies:')
   console.log('  /**')
@@ -30,12 +31,23 @@ program.on('--help', () => {
   console.log('   * @dependency lodash latest')
   console.log('   */')
 })
- 
+
 program.parse(process.argv)
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp(colors.red)
+  return
+}
+
+program.file = program.args[0]
 
 // Only execute if the target file exists
 if (!fs.existsSync(program.file)) {
-  throw new Error(`File ${program.file} does not exist`)
+  console.log('File not found.'.red)
+  console.log('')
+  program.outputHelp(colors.red)
+  process.exit(1)
+  return
 }
 
 // Make sure nodemon is available if the program requires it.
