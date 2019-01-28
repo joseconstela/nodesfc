@@ -16,6 +16,7 @@ const script = require('./script')
 program
   .version(require('./package.json').version)
   .arguments('<file>')
+  .option('-dr, --dryrun', 'Removes node_modules and package-lock.json before installing dependencies.')
   .option('-nd, --nodemon', 'Executes the file continiously. Requires https://nodemon.io/')
 
 // must be before .parse() since
@@ -65,8 +66,8 @@ const packageExists = fs.existsSync(`${targetPath}/package.json`)
 // If there's an existing package.json file for the specified file,
 // skip the dependencies installation and execute the script.
 if (packageExists) {
-  console.log('A package.json file already exists.')
-  console.log('Skipping dependencies installation.')
+  console.log('A package.json file already exists.'.yellow)
+  console.log('Skipping dependencies installation.'.yellow)
   script.execute([program.file], program, targetPath)
   return
 }
@@ -85,7 +86,7 @@ const dependenciesComment = comments.find(comment => {
 
 // If there's no dependencies comment, execute the script normally.
 if (!dependenciesComment) {
-  console.log('No dependencies comment found. Executing script.')
+  console.log('No dependencies comment found. Executing script.'.yellow)
   script.execute([program.file], program, targetPath)
   return
 }
@@ -100,11 +101,15 @@ dependenciesComment.tags.map(tag => {
 // If there are no dependencies found on the comment, execute the script
 // normally
 if (!dependencies.length) {
-  console.log('No dependencies comment found. Executing script.')
+  console.log('No dependencies comment found. Executing script.'.yellow)
 }
 
-// Remove the node_modules folder to ensure a clean-execution
-fs.removeSync(`${targetPath}/node_modules`)
+if (program.dryrun) {
+  // Remove the node_modules folder to ensure a clean-execution
+  console.log('Performing dryrun'.yellow)
+  fs.removeSync(`${targetPath}/node_modules`)
+  fs.removeSync(`${targetPath}/package-lock.json`)
+}
 
 // Initi npm package
 npm.load({ prefix: targetPath }, () => {
