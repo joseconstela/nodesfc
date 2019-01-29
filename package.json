@@ -1,15 +1,25 @@
 {
   "name": "nodesfc",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Single File Code - package.json-free node scripts",
   "main": "index.js",
+  "keywords": [
+    "commander",
+    "command",
+    "option",
+    "parser"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
     "nodesfc": "./index.js"
   },
-  "author": "Jose Constela",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joseconstela/nodesfc"
+  },
+  "author": "Jose Constela <jose@joseconstela.com>",
   "license": "MIT",
   "homepage": "https://github.com/joseconstela/nodesfc",
   "dependencies": {
