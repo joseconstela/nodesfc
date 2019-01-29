@@ -39,7 +39,7 @@ Options:
   -h, --help      output usage information
 
 Example:
-  $ nodesfc --file=example/file.js --nodemon
+  $ nodesfc example/file.js --nodemon
 
 Specifying dependencies:
   /**

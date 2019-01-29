@@ -1,6 +1,6 @@
 {
   "name": "nodesfc",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Single File Code - package.json-free node scripts",
   "main": "index.js",
   "keywords": [

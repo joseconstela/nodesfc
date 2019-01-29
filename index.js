@@ -24,7 +24,7 @@ program
 program.on('--help', () => {
   console.log('')
   console.log('Example:')
-  console.log('  $ nodesfc --file=example/file.js --nodemon')
+  console.log('  $ nodesfc example/file.js --nodemon')
   console.log('')
   console.log('Specifying dependencies:')
   console.log('  /**')
