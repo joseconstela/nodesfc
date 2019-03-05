@@ -1,11 +1,22 @@
 # Single File Code
 
-Single File Code, or sfc, allows to execute nodejs scripts with its dependencies
+> Single File Code, or sfc, allows to execute nodejs scripts with its dependencies
 defined in the script itself.
 
-This means that instead of having a package.json file and installing the
-dependencies via npm commands, you can specify the dependencies in a comment
-in your script.
+---
+
+<div align="center">
+	<p>
+    <sup>Support my work,</sup>
+		<br>
+		<a href="https://www.patreon.com/joseconstela">
+			<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+		</a>
+  </p>
+</div>
+
+Instead of having a package.json file and installing the dependencies via npm
+commands, you can specify the dependencies in your script comments.
 
 SFC will take care of installing the dependencies.
 
@@ -14,6 +25,12 @@ SFC will take care of installing the dependencies.
  * @dependency lodash latest
  */
 require('lodash').map([1,2,3,4], n => console.log(n))
+
+/**
+ * @dependency faker latest
+ */
+let fake = require('faker').fake('{{name.lastName}}, {{name.firstName}}')
+console.log(fake)
 ```
 
 It supports nodemon.io for your development-phase things.
