@@ -3,7 +3,6 @@
 > Single File Code, or sfc, allows to execute nodejs scripts with its dependencies
 defined in the script itself.
 
----
 
 <div align="center">
 	<p>
@@ -14,6 +13,7 @@ defined in the script itself.
 		</a>
   </p>
 </div>
+
 
 Instead of having a package.json file and installing the dependencies via npm
 commands, you can specify the dependencies in your script comments.
