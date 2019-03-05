@@ -11,7 +11,6 @@ SFC will take care of installing the dependencies.
 
 ```javascript
 /**
- * node.program
  * @dependency lodash latest
  */
 require('lodash').map([1,2,3,4], n => console.log(n))
@@ -43,7 +42,6 @@ Example:
 
 Specifying dependencies:
   /**
-   * node.program
    * @dependency lodash latest
    */
 ```

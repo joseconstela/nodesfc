@@ -28,7 +28,6 @@ program.on('--help', () => {
   console.log('')
   console.log('Specifying dependencies:')
   console.log('  /**')
-  console.log('   * node.program')
   console.log('   * @dependency lodash latest')
   console.log('   */')
 })
@@ -80,12 +79,12 @@ const comments = parser(contents)
 let dependencies = []
 
 // Find the comment that contains the dependencies
-const dependenciesComment = comments.find(comment => {
-  return comment.description === 'node.program'
+const dependenciesComments = comments.filter(comment => {
+  return (comment.tags||[]).find(t => t.tag === 'dependency')
 })
 
 // If there's no dependencies comment, execute the script normally.
-if (!dependenciesComment) {
+if (!dependenciesComments) {
   console.log('No dependencies comment found. Executing script.'.yellow)
   script.execute([program.file], program, targetPath)
   return
@@ -93,9 +92,11 @@ if (!dependenciesComment) {
 
 // For all the js-doc tags found in the dependencies comment, grab and parse
 // only the ones that contain actual requirements.
-dependenciesComment.tags.map(tag => {
-  if (tag.tag !== 'dependency') return;
-  dependencies.push(`${tag.name}@${tag.description}`)
+dependenciesComments.map(dc => {
+  dc.tags.map(tag => {
+    if (tag.tag !== 'dependency') return;
+    dependencies.push(`${tag.name}@${tag.description}`)
+  })
 })
 
 // If there are no dependencies found on the comment, execute the script
