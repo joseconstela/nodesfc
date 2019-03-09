@@ -7,17 +7,19 @@ const npm = require('npm'),
   colors = require('colors'),
   path = require('path'),
   commandExists = require('command-exists').sync,
-  program = require('commander')
+  program = require('commander'),
+  pkg = require('./package.json')
 
 // Require local dependencies
 const script = require('./script')
 
 // cli parameter parsing and --help symlink
 program
-  .version(require('./package.json').version)
+  .version(pkg.version)
   .arguments('<file>')
-  .option('-dr, --dryrun', 'Removes node_modules and package-lock.json before installing dependencies.')
-  .option('-nd, --nodemon', 'Executes the file continiously. Requires https://nodemon.io/')
+  .option('-d, --dryrun', 'Removes node_modules and package-lock.json before installing dependencies.')
+  .option('-n, --nodemon', 'Executes the file continiously. Requires https://nodemon.io/')
+  .option('--noupdate', 'Opt-out of update version check')
 
 // must be before .parse() since
 // node's emit() is immediate
@@ -37,6 +39,14 @@ program.parse(process.argv)
 if (!process.argv.slice(2).length) {
   program.outputHelp(colors.red)
   return
+}
+
+if (!program.noupdate) {
+  // Checks for available updates
+  require('update-notifier')({
+    pkg,
+    updateCheckInterval: 1000 * 60 * 60 * 24 * 2
+  }).notify({defer: false})
 }
 
 program.file = program.args[0]
