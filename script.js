@@ -38,9 +38,9 @@ module.exports.execute = execute
  * 
  * @param {Array} args 
  */
-let executeNpm = (args) => {
+let executeNpm = (args, cwd) => {
   return new Promise((resolve, reject) => {
-    let child = cp.spawn('npm', args, { stdio: null })
+    let child = cp.spawn('npm', args, { stdio: null, cwd })
     child.on('close', code =>
       code > 0 ? reject(code) : resolve()
     )

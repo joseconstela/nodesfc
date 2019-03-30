@@ -126,10 +126,11 @@ if (program.dryrun) {
 
 // Initi npm package
 npm.load({
-  prefix: targetPath }, () => {
+  prefix: targetPath
+}, () => {
   // Install the dependencies
   script
-    .executeNpm(['install', '--silent', '--no-audit', '--no-progress'].concat(dependencies))
+    .executeNpm(['install', '--silent', '--no-audit', '--no-progress'].concat(dependencies), targetPath)
     .then(() => {
       script.execute([program.file], program, targetPath)
     })
