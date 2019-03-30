@@ -4,6 +4,7 @@
 const npm = require('npm'),
   fs = require('fs-extra'),
   parser = require('comment-parser'),
+  debug = require('debug')('nodesfc'),
   colors = require('colors'),
   path = require('path'),
   commandExists = require('command-exists').sync,
@@ -53,8 +54,7 @@ program.file = program.args[0]
 
 // Only execute if the target file exists
 if (!fs.existsSync(program.file)) {
-  console.log('File not found.'.red)
-  console.log('')
+  console.error('File not found.'.red)
   program.outputHelp(colors.red)
   process.exit(1)
   return
@@ -75,8 +75,8 @@ const packageExists = fs.existsSync(`${targetPath}/package.json`)
 // If there's an existing package.json file for the specified file,
 // skip the dependencies installation and execute the script.
 if (packageExists) {
-  console.log('A package.json file already exists.'.yellow)
-  console.log('Skipping dependencies installation.'.yellow)
+  debug('A package.json file already exists.'.yellow)
+  debug('Skipping dependencies installation.'.yellow)
   script.execute([program.file], program, targetPath)
   return
 }
@@ -95,7 +95,7 @@ const dependenciesComments = comments.filter(comment => {
 
 // If there's no dependencies comment, execute the script normally.
 if (!dependenciesComments) {
-  console.log('No dependencies comment found. Executing script.'.yellow)
+  debug('No dependencies comment found. Executing script.'.yellow)
   script.execute([program.file], program, targetPath)
   return
 }
@@ -112,22 +112,20 @@ dependenciesComments.map(dc => {
 // If there are no dependencies found on the comment, execute the script
 // normally
 if (!dependencies.length) {
-  console.log('No dependencies comment found. Executing script.'.yellow)
+  debug('No dependencies comment found. Executing script.'.yellow)
 }
 
 if (program.dryrun) {
   // Remove the node_modules folder to ensure a clean-execution
-  console.log('Performing dryrun'.yellow)
+  debug('Performing dryrun'.yellow)
   fs.removeSync(`${targetPath}/node_modules`)
   fs.removeSync(`${targetPath}/package-lock.json`)
 }
 
 // Initi npm package
-npm.load({ prefix: targetPath }, () => {
-  npm.config.set('dir', targetPath)
+npm.load({ prefix: targetPath, loglevel: 'silent', progress: false }, () => {
   // Install the dependencies
-  npm.commands.install(dependencies, function (er, data) {
-    // Execute the script
+  npm.commands.install(dependencies, function (error, data) {
     script.execute([program.file], program, targetPath)
   })
 })
