@@ -1,4 +1,5 @@
 const cp = require('child_process')
+const debug = require('debug')('nodesfc')
 
 /**
  * Executes a node script, either using nodemon or node executable.
@@ -13,14 +14,17 @@ let execute = (args, program, targetPath) => {
       args.push('--watch')
       args.push(targetPath)
     }
+    
     let child = cp.spawn(program.nodemon ? 'nodemon' : 'node', args)
-    let err = null
+
     child.stdout.on('data', data =>
-      console.log(data.toString().replace('\n', ''))
+      console.log(data.toString().replace(new RegExp(/\n$/), ''))
     )
-    child.stderr.on('data', data =>
-      err = data.toString()
-    )
+
+    child.stderr.on('data', data => {
+      console.error(data.toString().replace(new RegExp(/\n$/), ''))
+    })
+
     child.on('close', code =>
       code > 0 ? reject(code) : resolve()
     )
