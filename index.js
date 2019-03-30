@@ -113,6 +113,8 @@ dependenciesComments.map(dc => {
 // normally
 if (!dependencies.length) {
   debug('No dependencies comment found. Executing script.'.yellow)
+  script.execute([program.file], program, targetPath)
+  return
 }
 
 if (program.dryrun) {
@@ -123,7 +125,8 @@ if (program.dryrun) {
 }
 
 // Initi npm package
-npm.load({ prefix: targetPath, loglevel: 'silent', progress: false }, () => {
+npm.load({
+  prefix: targetPath, loglevel: 'silent', progress: false, audit: false }, () => {
   // Install the dependencies
   npm.commands.install(dependencies, function (error, data) {
     script.execute([program.file], program, targetPath)
