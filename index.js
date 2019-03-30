@@ -126,9 +126,11 @@ if (program.dryrun) {
 
 // Initi npm package
 npm.load({
-  prefix: targetPath, loglevel: 'silent', progress: false, audit: false }, () => {
+  prefix: targetPath }, () => {
   // Install the dependencies
-  npm.commands.install(dependencies, function (error, data) {
-    script.execute([program.file], program, targetPath)
-  })
+  script
+    .executeNpm(['install', '--silent', '--no-audit', '--no-progress'].concat(dependencies))
+    .then(() => {
+      script.execute([program.file], program, targetPath)
+    })
 })

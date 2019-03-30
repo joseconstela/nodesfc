@@ -14,7 +14,7 @@ let execute = (args, program, targetPath) => {
       args.push('--watch')
       args.push(targetPath)
     }
-    
+
     let child = cp.spawn(program.nodemon ? 'nodemon' : 'node', args)
 
     child.stdout.on('data', data =>
@@ -32,3 +32,19 @@ let execute = (args, program, targetPath) => {
 }
 
 module.exports.execute = execute
+
+/**
+ * Executes a npm command
+ * 
+ * @param {Array} args 
+ */
+let executeNpm = (args) => {
+  return new Promise((resolve, reject) => {
+    let child = cp.spawn('npm', args, { stdio: null })
+    child.on('close', code =>
+      code > 0 ? reject(code) : resolve()
+    )
+  })
+}
+
+module.exports.executeNpm = executeNpm
