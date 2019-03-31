@@ -10,12 +10,7 @@ const debug = require('debug')('nodesfc')
  */
 let execute = (args, program, targetPath) => {
   return new Promise((resolve, reject) => {
-    if (program.nodemon) {
-      args.push('--watch')
-      args.push(targetPath)
-    }
-
-    let child = cp.spawn(program.nodemon ? 'nodemon' : 'node', args)
+    let child = cp.spawn('node', args)
 
     child.stdout.on('data', data =>
       console.log(data.toString().replace(new RegExp(/\n$/), ''))
@@ -25,8 +20,10 @@ let execute = (args, program, targetPath) => {
       console.error(data.toString().replace(new RegExp(/\n$/), ''))
     })
 
-    child.on('close', code =>
+    child.on('close', code => {
       code > 0 ? reject(code) : resolve()
+      debug
+    }
     )
   })
 }
