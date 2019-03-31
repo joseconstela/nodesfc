@@ -2,7 +2,7 @@ const cp = require('child_process')
 const debug = require('debug')('nodesfc')
 
 /**
- * Executes a node script, either using nodemon or node executable.
+ * Executes a node script and handles the stds
  * 
  * @param {Array} args 
  * @param {Object} program 

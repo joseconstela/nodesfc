@@ -33,7 +33,7 @@ let fake = require('faker').fake('{{name.lastName}}, {{name.firstName}}')
 console.log(fake)
 ```
 
-It supports nodemon.io for your development-phase things.
+It supports `--watch` for your development-phase things.
 
 ## Installation
 
@@ -51,11 +51,11 @@ Usage: nodesfc [options] <file>
 Options:
   -V, --version   output the version number
   -dr, --dryrun   Removes node_modules and package-lock.json before installing dependencies.
-  -nd, --nodemon  Executes the file continiously. Requires https://nodemon.io/
+  -w, --watch     Watch for changes in the file
   -h, --help      output usage information
 
 Example:
-  $ nodesfc example/file.js --nodemon
+  $ nodesfc --watch example/file.js
 
 Specifying dependencies:
   /**
