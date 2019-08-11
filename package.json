@@ -36,7 +36,7 @@
     "npm": "^6.7.0",
     "process.argv": "^0.1.0",
     "update-notifier": "^2.5.0",
-    "snyk": "^1.189.0"
+    "snyk": "^1.216.0"
   },
   "snyk": true
 }
