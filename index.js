@@ -1,5 +1,3 @@
-process.env.DEBUG='nodesfc'
-
 const npm = require('npm'),
   fs = require('fs-extra'),
   parser = require('comment-parser'),
