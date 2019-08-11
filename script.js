@@ -1,6 +1,11 @@
 const cp = require('child_process')
 const debug = require('debug')('nodesfc')
 
+const buildStd = (std) => {
+  std = std.replace(new RegExp(/\n$/), '')
+  return std.trim() === '' ? null : std
+}
+
 /**
  * Executes a node script and handles the stds
  * 
@@ -12,24 +17,28 @@ let execute = async (args, program, targetPath) => {
   return new Promise((resolve, reject) => {
     let child = cp.spawn('node', args)
 
-    let err = ''
-    let result = ''
+    let std = {
+      out: '',
+      err: ''
+    }
 
     child.stdout.on('data', data => {
       let r = data.toString().replace(new RegExp(/\n$/), '')
-      if (!program.cli) result += `${r}\n`
+      if (!program.cli) std.out += `${r}\n`
       else console.log(r)
     })
 
     child.stderr.on('data', data => {
       let r = data.toString().replace(new RegExp(/\n$/), '')
-      if (!program.cli) err += r
+      if (!program.cli) std.err += r
       else console.error(r)
     })
 
     child.on('close', code => {
-      code > 0 ? reject(err || code) : resolve(result.replace(new RegExp(/\n$/), ''))
-      debug
+      std.out = buildStd(std.out)
+      std.err = buildStd(std.err)
+      code > 0 ? reject({std, code}) : resolve({std, code})
+      debug({std, code})
     })
   })
 }
