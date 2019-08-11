@@ -1,7 +1,7 @@
 # Single File Code
 
-> Single File Code, or sfc, allows to execute nodejs scripts with its dependencies
-defined in the script itself.
+> Single File Code, or sfc, allows to execute nodejs scripts with its dependencies.
+> defined in the script itself. _Either via cli or via module_
 
 <div>
 	<p>
@@ -43,7 +43,7 @@ Use your terminal to install sfc as a globally availabe package.
 npm i nodesfc -g
 ```
 
-## Usage
+## Cli usage
 
 ```bash
 Usage: nodesfc [options] <file>
@@ -68,6 +68,16 @@ To get help, execute:
 ```bash
 nodesfc -h
 ```
+
+## Library usage
+
+```javascript
+require('nodesfc')
+  .init({file: 'my_javascript_file.js'})
+  .then(result => console.log({result}))
+```
+
+[fully working example](example/run_from_nodejs.js)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
