@@ -8,23 +8,29 @@ const debug = require('debug')('nodesfc')
  * @param {Object} program 
  * @param {String} targetPath 
  */
-let execute = (args, program, targetPath) => {
+let execute = async (args, program, targetPath) => {
   return new Promise((resolve, reject) => {
     let child = cp.spawn('node', args)
 
-    child.stdout.on('data', data =>
-      console.log(data.toString().replace(new RegExp(/\n$/), ''))
-    )
+    let err = ''
+    let result = ''
+
+    child.stdout.on('data', data => {
+      let r = data.toString().replace(new RegExp(/\n$/), '')
+      if (!program.cli) result += `${r}\n`
+      else console.log(r)
+    })
 
     child.stderr.on('data', data => {
-      console.error(data.toString().replace(new RegExp(/\n$/), ''))
+      let r = data.toString().replace(new RegExp(/\n$/), '')
+      if (!program.cli) err += r
+      else console.error(r)
     })
 
     child.on('close', code => {
-      code > 0 ? reject(code) : resolve()
+      code > 0 ? reject(err || code) : resolve(result.replace(new RegExp(/\n$/), ''))
       debug
-    }
-    )
+    })
   })
 }
 
@@ -37,7 +43,7 @@ module.exports.execute = execute
  */
 let executeNpm = (args, cwd) => {
   return new Promise((resolve, reject) => {
-    let child = cp.spawn('npm', args, { stdio: null, cwd })
+    let child = cp.spawn(/^win/.test(process.platform) ? 'npm.cmd' : 'npm', args, { stdio: null, cwd })
     child.on('close', code =>
       code > 0 ? reject(code) : resolve()
     )
