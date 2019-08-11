@@ -17,28 +17,27 @@ let execute = async (args, program, targetPath) => {
   return new Promise((resolve, reject) => {
     let child = cp.spawn('node', args)
 
-    let std = {
-      out: '',
-      err: ''
-    }
+    let stdLines = []
 
     child.stdout.on('data', data => {
       let r = data.toString().replace(new RegExp(/\n$/), '')
-      if (!program.cli) std.out += `${r}\n`
+      if (!program.cli) stdLines.push({
+        output: r, err: false, date: new Date()
+      })
       else console.log(r)
     })
 
     child.stderr.on('data', data => {
       let r = data.toString().replace(new RegExp(/\n$/), '')
-      if (!program.cli) std.err += r
+      if (!program.cli) stdLines.push({
+        output: r, err: true, date: new Date()
+      })
       else console.error(r)
     })
 
     child.on('close', code => {
-      std.out = buildStd(std.out)
-      std.err = buildStd(std.err)
-      code > 0 ? reject({std, code}) : resolve({std, code})
-      debug({std, code})
+      code > 0 ? reject({stdLines, code}) : resolve({stdLines, code})
+      debug({stdLines, code})
     })
   })
 }
