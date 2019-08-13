@@ -15,6 +15,12 @@ const buildStd = (std) => {
  */
 let execute = async (args, program, targetPath) => {
   return new Promise((resolve, reject) => {
+
+    // Set environment variables
+    Object.keys(program.env || {}).map(k => {
+      process.env[k] = program.env[k]
+    })
+
     let child = cp.spawn('node', args)
 
     let stdLines = []

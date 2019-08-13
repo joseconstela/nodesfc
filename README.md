@@ -73,14 +73,21 @@ nodesfc -h
 
 ```javascript
 require('nodesfc')
-  .init({file: 'my_javascript_file.js'})
+  .init({
+    file: 'my_javascript_file.js', // File to execute
+    env: { // Optional k->v pairs of custon environment variables
+      CHARACTER: 'Jon Snow'
+    }
+  })
   .then(result => console.log({result}))
 ```
 
 [fully working example](example/run_from_nodejs.js)
 
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
