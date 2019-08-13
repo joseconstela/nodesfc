@@ -75,7 +75,7 @@ nodesfc -h
 require('nodesfc')
   .init({
     file: 'my_javascript_file.js', // File to execute
-    env: { // Optional k->v pairs of custon environment variables
+    env: { // Optional k->v pairs of custom environment variables
       CHARACTER: 'Jon Snow'
     }
   })
