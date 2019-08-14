@@ -20,17 +20,23 @@ let execute = async (args, program, targetPath) => {
     let stdLines = []
 
     child.stdout.on('data', data => {
-      let r = data.toString().replace(new RegExp(/\n$/), '')
-      if (!program.cli) stdLines.push({
-        output: r, err: false, date: new Date()
+      const date = new Date()
+      const lines = data.toString().replace(new RegExp(/\n$/, 'g'), '').split('\n')
+      if (!program.cli) lines.map(r => {
+        stdLines.push({
+          output: r, err: false, date
+        })
       })
       else console.log(r)
     })
 
     child.stderr.on('data', data => {
-      let r = data.toString().replace(new RegExp(/\n$/), '')
-      if (!program.cli) stdLines.push({
-        output: r, err: true, date: new Date()
+      const date = new Date()
+      const lines = data.toString().replace(new RegExp(/\n$/, 'g'), '').split('\n')
+      if (!program.cli) lines.map(r => {
+        stdLines.push({
+          output: r, err: true, date
+        })
       })
       else console.error(r)
     })
