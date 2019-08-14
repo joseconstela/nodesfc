@@ -75,9 +75,48 @@ nodesfc -h
 require('nodesfc')
   .init({file: 'my_javascript_file.js'})
   .then(result => console.log({result}))
+
+/*
+  {
+    "stdLines": [
+      {
+        "output": "1",
+        "err": false,
+        "date": "2019-08-14T11:47:21.821Z"
+      },
+      {
+        "output": "2",
+        "err": false,
+        "date": "2019-08-14T11:47:21.821Z"
+      },
+      {
+        "output": "3",
+        "err": false,
+        "date": "2019-08-14T11:47:21.821Z"
+      },
+      {
+        "output": "4",
+        "err": false,
+        "date": "2019-08-14T11:47:21.821Z"
+      },
+      {
+        "output": "Boyle, Alek",
+        "err": false,
+        "date": "2019-08-14T11:47:23.063Z"
+      }
+    ],
+    "code": 0
+  }
+*/
 ```
 
-[fully working example](example/run_from_nodejs.js)
+The `init` method returns a Promise with an object with the properties:
+
+- `stdLines` being an array of objects containing the STD outputs for both
+errors and logs. In the same order as they were triggered. 
+  - `output` string - the actual text logged
+  - `err` boolean - determines if the log was sent to std-err or not
+- `code` number - the execution exit code.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
