@@ -29,5 +29,8 @@
     "npm": "^6.14.8",
     "process.argv": "^0.1.0",
     "update-notifier": "^5.0.0"
+  },
+  "engines": {
+    "node" : ">=12.18.3"
   }
 }
