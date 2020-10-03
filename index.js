@@ -104,7 +104,6 @@ const init = async (program) => {
         prefix: targetPath
       }, () => {
         debug(program, 'npm loaded')
-        console.log({targetPath})
         // Install the dependencies
         script
           .executeNpm(['install', '--silent', '--no-audit', '--no-progress', '--no-save'].concat(dependencies), targetPath)
