@@ -49,10 +49,12 @@ npm i nodesfc -g
 Usage: nodesfc [options] <file>
 
 Options:
-  -V, --version   output the version number
-  -dr, --dryrun   Removes node_modules and package-lock.json before installing dependencies.
-  -w, --watch     Watch for changes in the file
-  -h, --help      output usage information
+  -V, --version  output the version number
+  -d, --dryrun   Removes node_modules and package-lock.json before installing dependencies.
+  --debug        Enables debug messages.
+  -w, --watch    Watch for changes in the file
+  --noupdate     Opt-out of update version check
+  -h, --help     display help for command
 
 Example:
   $ nodesfc --watch example/file.js
