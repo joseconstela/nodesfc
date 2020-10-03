@@ -1,9 +1,14 @@
 const npm = require('npm'),
-  fs = require('fs-extra'),
+  fs = require('fs'),
   parser = require('comment-parser'),
-  debug = require('debug')('nodesfc'),
   path = require('path'),
-  chokidar = require('chokidar')
+  chokidar = require('chokidar'),
+  resolve = require('path').resolve
+
+const debug = (program, m) => {
+  if (!program.debug) return;
+  console.log(JSON.stringify(m))
+}
   
 // Require local dependencies
 const script = require('./script')
@@ -14,35 +19,35 @@ const script = require('./script')
  * @param {Object} program Commander's original object
  */
 const init = async (program) => {
-  debug(`Init. Program file: ${program.file}`)
+  debug(program, `Init. Program file: ${program.file}`)
 
   // Only execute if the target file exists
   if (!fs.existsSync(program.file)) {
     throw new Error('file-not-found')
   }
 
-  debug('File found')
+  debug(program, 'File found')
 
   // Initialize path-related variables
-  const targetPath = path.dirname(program.file)
+  const targetPath = path.dirname(resolve(program.file))
 
-  debug(`Target path: ${targetPath}`)
+  debug(program, `Target path: ${targetPath}`)
 
   const run = () => {
     const contents = fs.readFileSync(program.file, 'utf-8')
     const packageExists = fs.existsSync(`${targetPath}/package.json`)
 
-    debug(`Package file exists: ${packageExists}`)
+    debug(program, `Package file exists: ${packageExists}`)
 
     // If there's an existing package.json file for the specified file,
     // skip the dependencies installation and execute the script.
     if (packageExists) {
-      debug('A package.json file already exists.')
-      debug('Skipping dependencies installation.')
+      debug(program, 'A package.json file already exists.')
+      debug(program, 'Skipping dependencies installation.')
       return script.execute([program.file], program, targetPath)
     }
 
-    debug(`Parse comments...`)
+    debug(program, `Parse comments...`)
 
     // Parse the comments for the targeted file
     const comments = parser(contents)
@@ -58,7 +63,7 @@ const init = async (program) => {
 
     // If there's no dependencies comment, execute the script normally.
     if (!dependenciesComments) {
-      debug('No dependencies comment found. Executing script.')
+      debug(program, 'No dependencies comment found. Executing script.')
       return script.execute([program.file], program, targetPath)
     }
 
@@ -67,7 +72,7 @@ const init = async (program) => {
     dependenciesComments.map(dc => {
       dc.tags.map(tag => {
         if (tag.tag !== 'dependency') return;
-        debug(`Adding dependency ${tag.name}@${tag.description}`)
+        debug(program, `Adding dependency ${tag.name}@${tag.description}`)
         dependencies.push(`${tag.name}@${tag.description}`)
       })
     })
@@ -75,31 +80,36 @@ const init = async (program) => {
     // If there are no dependencies found on the comment, execute the script
     // normally
     if (!dependencies.length) {
-      debug('No dependencies comment found. Executing script.')
+      debug(program, 'No dependencies comment found. Executing script.')
       return script.execute([program.file], program, targetPath)
     }
 
     if (program.dryrun) {
       // Remove the node_modules folder to ensure a clean-execution
-      debug('Performing dryrun')
-      fs.removeSync(`${targetPath}/node_modules`)
-      fs.removeSync(`${targetPath}/package-lock.json`)
+      debug(program, 'Performing dryrun')
+      if (fs.existsSync(`${targetPath}/node_modules`)) {
+        fs.rmdirSync(`${targetPath}/node_modules`)
+      }
+      if (fs.existsSync(`${targetPath}/package-lock.json`)) {
+        fs.unlinkSync(`${targetPath}/package-lock.json`)
+      }
     }
 
-    debug('Init main promise')
+    debug(program, 'Init main promise')
 
     return new Promise((resolve, reject) => {
-      debug('Created main promise')
+      debug(program, 'Created main promise')
       // Init npm package
       npm.load({
         prefix: targetPath
       }, () => {
-        debug('npm loaded')
+        debug(program, 'npm loaded')
+        console.log({targetPath})
         // Install the dependencies
         script
-          .executeNpm(['install', '--silent', '--no-audit', '--no-progress'].concat(dependencies), targetPath)
+          .executeNpm(['install', '--silent', '--no-audit', '--no-progress', '--no-save'].concat(dependencies), targetPath)
           .then(() => {
-            debug('Dependencies installed. Running now')
+            debug(program, 'Dependencies installed. Running now')
             return script.execute([program.file], program, targetPath)
               .then(result => {
                 if (program.watch) {
@@ -108,15 +118,15 @@ const init = async (program) => {
                 resolve(result)
               })
               .catch(ex => {
-                debug('Script execution error')
+                debug(program, 'Script execution error')
                 if (program.watch) {
                   console.log('Error - waiting for file changes to restart')
                 }
               })
           })
           .catch(ex => {
-            debug('NPM error')
-            debug(ex)
+            debug(program, 'NPM error')
+            debug(program, ex)
           })
       })
     })
@@ -124,7 +134,7 @@ const init = async (program) => {
   }
 
   if (program.watch) {
-    debug('Watching for changes')
+    debug(program, 'Watching for changes')
     chokidar.watch(program.file, {
         persistent: true
       })
@@ -133,7 +143,7 @@ const init = async (program) => {
         run()
       })
   }
-  debug('nodemon-like integration disabled')
+  debug(program, 'nodemon-like integration disabled')
 
   return run()
 }

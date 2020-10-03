@@ -1,5 +1,7 @@
 const cp = require('child_process')
-const debug = require('debug')('nodesfc')
+const debug = m => {
+  console.log(JSON.stringify(m))
+}
 
 const buildStd = (std) => {
   std = std.replace(new RegExp(/\n$/), '')
@@ -28,12 +30,12 @@ let execute = async (args, program, targetPath) => {
     child.stdout.on('data', data => {
       const date = new Date()
       const lines = data.toString().replace(new RegExp(/\n$/, 'g'), '').split('\n')
-      if (!program.cli) lines.map(r => {
-        stdLines.push({
-          output: r, err: false, date
-        })
+      lines.map(r => {
+        stdLines.push({ output: r, err: false, date })
+        if (program.cli) {
+          console.log(r)
+        }
       })
-      else console.log(r)
     })
 
     child.stderr.on('data', data => {
@@ -49,7 +51,7 @@ let execute = async (args, program, targetPath) => {
 
     child.on('close', code => {
       code > 0 ? reject({stdLines, code}) : resolve({stdLines, code})
-      debug({stdLines, code})
+      if (program.debug) debug({stdLines, code})
     })
   })
 }

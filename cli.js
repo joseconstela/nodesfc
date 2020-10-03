@@ -9,6 +9,7 @@ program
   .version(pkg.version)
   .arguments('<file>')
   .option('-d, --dryrun', 'Removes node_modules and package-lock.json before installing dependencies.')
+  .option('--debug', 'Enables debug messages.')
   .option('-w, --watch', 'Watch for changes in the file')
   .option('--noupdate', 'Opt-out of update version check')
 
@@ -40,7 +41,6 @@ if (!program.noupdate) {
   }).notify({defer: false})
 }
 
-require('.').init({
-  file: program.args[0],
-  cli: true
-})
+require('.').init(
+  Object.assign({}, program, {file: program.args[0], cli: true})
+)
