@@ -1,3 +1,4 @@
+const path = require('path')
 const cp = require('child_process')
 const debug = m => {
   console.log(JSON.stringify(m))
@@ -15,15 +16,24 @@ const buildStd = (std) => {
  * @param {Object} program 
  * @param {String} targetPath 
  */
-let execute = async (args, program, targetPath) => {
-  return new Promise((resolve, reject) => {
-
+let execute = async (program, targetPath) => {
+  return new Promise(async (resolve, reject) => {
     // Set environment variables
     Object.keys(program.env || {}).map(k => {
       process.env[k] = program.env[k]
     })
 
-    let child = cp.spawn('node', args)
+    if (program.method) {
+      try {
+        resolve(require(program.file)[program.method].apply(null, program.methodArgs || []))
+      }
+      catch (ex) {
+        reject(ex)
+      }
+      return
+    }
+
+    let child = cp.spawn('node', [program.file])
 
     let stdLines = []
 
@@ -46,7 +56,7 @@ let execute = async (args, program, targetPath) => {
           output: r, err: true, date
         })
       })
-      else console.error(r)
+      else console.error(data.toString())
     })
 
     child.on('close', code => {

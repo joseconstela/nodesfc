@@ -40,7 +40,4 @@ if (!program.noupdate) {
     updateCheckInterval: 1000 * 60 * 60 * 24 * 2
   }).notify({defer: false})
 }
-
-require('.').init(
-  Object.assign({}, program, {file: program.args[0], cli: true})
-)
+require('.').init( Object.assign({}, program, {file: program.args[0], cli: true}) )

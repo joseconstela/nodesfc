@@ -1,17 +1,7 @@
 # Single File Code
 
-> Single File Code, or sfc, allows to execute nodejs scripts with its dependencies.
+> Single File Code, or sfc, allows to execute NodeJS scripts and methods with its dependencies.
 > defined in the script itself. _Either via cli or via module_
-
-<div>
-	<p>
-    <sup>Support my work,</sup>
-		<br>
-		<a href="https://www.patreon.com/joseconstela">
-			<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
-		</a>
-  </p>
-</div>
 
 Instead of having a package.json file and installing the dependencies via npm
 commands, you can specify the dependencies in your script comments.
@@ -72,6 +62,32 @@ nodesfc -h
 ```
 
 ## Library usage
+
+You can invoke a JS file in two different ways.
+
+### Invoking an specific method (like in AWS Lambda)
+
+This will return the method's result - as it is.
+
+```javascript
+let lib = require('nodesfc')
+
+let r = await lib.init({
+  method: 'handler', // Name of the method to be executed
+  methodArgs: ["hello", "world"], // List of parameters to apply
+  file: './export-handler.js'
+})
+
+console.log(r)
+
+// { firstParameter: 'hello', secondParameter: 'world' }
+```
+
+The `init` method returns a Promise with the method's result.
+
+### Executing an entine NodeJS script
+
+This will return the full std output as an array.
 
 ```javascript
 require('nodesfc')

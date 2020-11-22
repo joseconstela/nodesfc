@@ -21,8 +21,11 @@ const script = require('./script')
 const init = async (program) => {
   debug(program, `Init. Program file: ${program.file}`)
 
+  program.file = path.resolve(program.file)
+
   // Only execute if the target file exists
   if (!fs.existsSync(program.file)) {
+    console.error(program.file)
     throw new Error('file-not-found')
   }
 
@@ -44,7 +47,7 @@ const init = async (program) => {
     if (packageExists) {
       debug(program, 'A package.json file already exists.')
       debug(program, 'Skipping dependencies installation.')
-      return script.execute([program.file], program, targetPath)
+      return script.execute(program, targetPath)
     }
 
     debug(program, `Parse comments...`)
@@ -64,7 +67,7 @@ const init = async (program) => {
     // If there's no dependencies comment, execute the script normally.
     if (!dependenciesComments) {
       debug(program, 'No dependencies comment found. Executing script.')
-      return script.execute([program.file], program, targetPath)
+      return script.execute(program, targetPath)
     }
 
     // For all the js-doc tags found in the dependencies comment, grab and parse
@@ -81,7 +84,7 @@ const init = async (program) => {
     // normally
     if (!dependencies.length) {
       debug(program, 'No dependencies comment found. Executing script.')
-      return script.execute([program.file], program, targetPath)
+      return script.execute(program, targetPath)
     }
 
     if (program.dryrun) {
@@ -109,7 +112,7 @@ const init = async (program) => {
           .executeNpm(['install', '--silent', '--no-audit', '--no-progress', '--no-save'].concat(dependencies), targetPath)
           .then(() => {
             debug(program, 'Dependencies installed. Running now')
-            return script.execute([program.file], program, targetPath)
+            return script.execute(program, targetPath)
               .then(result => {
                 if (program.watch) {
                   console.log('Clean exit - waiting for file changes to restart')
