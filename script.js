@@ -25,10 +25,14 @@ let execute = async (program, targetPath) => {
 
     if (program.method) {
       try {
-        resolve(require(program.file)[program.method].apply(null, program.methodArgs || []))
+        let lib = require(program.file)
+        resolve(lib[program.method].apply(null, program.methodArgs || []))
       }
       catch (ex) {
         reject(ex)
+      }
+      finally {
+        delete require.cache[program.file]
       }
       return
     }
